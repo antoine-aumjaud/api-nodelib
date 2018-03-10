@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports.ExpressApp = require('src/server/expressapp');
+module.exports.ExpressApp = require('./src/server/expressapp');
