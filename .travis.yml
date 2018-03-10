@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "8"
+os:
+  - linux
+
+cache:
+  yarn: true
+
+notifications:
+  email: 
+    on_failure: always
+    on_sucess: never
+  webhooks:
+    urls:
+      - https://api-synology-chatbot.aumjaud.fr/send-travis/continuous-integration
+    on_success: always
+    on_failure: always
