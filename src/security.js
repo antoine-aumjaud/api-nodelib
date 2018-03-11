@@ -1,7 +1,7 @@
 'use strict';
 
 const fs  = require('fs');
-const jwt = require('jsonwebtoken');
+const jwtVerifier = require('jsonwebtoken');
 
 module.exports.checkSecureKeyAccess = (requestSecureKey, configSecureToken) => {
     if(configSecureToken === requestSecureKey) {
@@ -13,13 +13,19 @@ module.exports.checkSecureKeyAccess = (requestSecureKey, configSecureToken) => {
     }
 }
 
-module.exports.checkJWTAccess = (token) => {
+module.exports.checkJWTAccess = (token, apiName) => {
     const cert = fs.readFileSync('conf/jwt-public-cert.pem');  // get public key
     try {
-        return jwt.verify(token, cert);
+        const jwt = jwtVerifier.verify(token, cert);
+        if(jwt.autorization !== "all"
+          && jwt.autorization !== apiName) {
+            console.log("SECURITY: no access, " + autorization);
+            return false;
+        } 
+        return true;
     }
     catch(e) {
         console.log("SECURITY: invalid JWT, " + e);
-        return null;
+        return false;
     }
 }

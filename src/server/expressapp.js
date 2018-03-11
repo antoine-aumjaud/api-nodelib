@@ -7,10 +7,11 @@ const jwt = require('jsonwebtoken');
 const security = require('../security');
 
 class ExpressApp {
-    constructor(commonConfigFile, configFile) {
-        this.commonConfig = JSON.parse(fs.readFileSync(commonConfigFile));
-        this.config       = JSON.parse(fs.readFileSync(configFile));
-        this.configFile   = configFile;
+    constructor(apiName) {
+        this.apiName      = apiName;
+        this.configFile   = 'conf/' + this.apiName;
+        this.commonConfig = JSON.parse(fs.readFileSync('conf-common.json'));
+        this.config       = JSON.parse(fs.readFileSync(this.configFile));
     }
     router() {
         return express.Router()
@@ -28,10 +29,8 @@ class ExpressApp {
                 else if(req.header("Authorization") != null) {
                     const header  = req.header("Authorization");
                     const token   = header.substring(header.indexOf("Bearer") + 7);
-                    const decoded = security.checkJWTAccess(token);
-                    if(decoded != null) {
-                        req.header("name",  decoded.name);
-                        req.header("login", decoded.login);
+                    const isValid = security.checkJWTAccess(token, this.apiName);
+                    if(isValid) {
                         next();
                     }
                     else {
