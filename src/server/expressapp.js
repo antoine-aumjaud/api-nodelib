@@ -10,14 +10,15 @@ class ExpressApp {
     constructor(commonConfigFile, configFile) {
         this.commonConfig = JSON.parse(fs.readFileSync(commonConfigFile));
         this.config       = JSON.parse(fs.readFileSync(configFile));
+        this.configFile   = configFile;
     }
-    get router() {
+    router() {
         return express.Router()
             .get('/hi',   (req, res) => res.send("hello"))
             .get('/info', (req, res) => res.json( { "name": commonConfig.application_name, "version": commonConfig.application_version, "buildDate": commonConfig.build_date } ))
-            
+
             .all('/secure/*', (req, res, next) => {
-                const reqSecureKey = req.header("secure-key"); 
+                let reqSecureKey = req.header("secure-key"); 
                 if(reqSecureKey == null) {
                     reqSecureKey = req.query["secure-key"]; 
                 }
@@ -40,10 +41,10 @@ class ExpressApp {
                 else {
                     res.status(401).send('Not authorized');
                 }
-            }) 
+            })
 
             .get('/secure/reloadConfig', (req, res) => {
-                this.config = JSON.parse(fs.readFileSync(configFile));
+                this.config = JSON.parse(fs.readFileSync(this.configFile));
                 res.status(200).send("done");
             })
             ;
