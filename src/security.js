@@ -19,7 +19,7 @@ module.exports.checkJWTAccess = (token) => {
         return jwt.verify(token, cert);
     }
     catch(e) {
-        console.log("SECURITY: invalid JWT, " + err);
+        console.log("SECURITY: invalid JWT, " + e);
         return null;
     }
 }
