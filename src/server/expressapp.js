@@ -15,7 +15,7 @@ class ExpressApp {
     router() {
         return express.Router()
             .get('/hi',   (req, res) => res.send("hello"))
-            .get('/info', (req, res) => res.json( { "name": commonConfig.application_name, "version": commonConfig.application_version, "buildDate": commonConfig.build_date } ))
+            .get('/info', (req, res) => res.json( { "name": this.commonConfig.application_name, "version": this.commonConfig.application_version, "buildDate": this.commonConfig.build_date } ))
 
             .all('/secure/*', (req, res, next) => {
                 let reqSecureKey = req.header("secure-key"); 
