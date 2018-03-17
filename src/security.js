@@ -17,9 +17,8 @@ module.exports.checkJWTAccess = (token, apiName) => {
     const cert = fs.readFileSync('conf/jwt-public-cert.pem');  // get public key
     try {
         const jwt = jwtVerifier.verify(token, cert);
-        if(jwt.autorization !== "all"
-          && jwt.autorization !== apiName) {
-            console.log("SECURITY: no access, " + autorization);
+        if(jwt.autorization == null || (!jwt.autorization.contains("all") && !jwt.autorization.contains(apiName))) {
+            console.log("SECURITY: no access, " + jwt.autorization);
             return false;
         } 
         return true;

@@ -25,21 +25,18 @@ class ExpressApp {
                 }
                 if(security.checkSecureKeyAccess(reqSecureKey, this.config.secureKey)) {
                     next();
+                    return;
                 }
-                else if(req.header("Authorization") != null) {
-                    const header  = req.header("Authorization");
-                    const token   = header.substring(header.indexOf("Bearer") + 7);
-                    const isValid = security.checkJWTAccess(token, this.apiName);
-                    if(isValid) {
+
+                const reqAuthorization = req.header("Authorization");
+                if(reqAuthorization != null) {
+                    const token = reqAuthorization.substring(reqAuthorization.indexOf("Bearer") + 7);
+                    if(security.checkJWTAccess(token, this.apiName)) {
                         next();
-                    }
-                    else {
-                        res.status(401).send('Not authorized');
+                        return;
                     }
                 }
-                else {
-                    res.status(401).send('Not authorized');
-                }
+                res.status(401).send('Not authorized');
             })
 
             .get('/secure/reloadConfig', (req, res) => {
