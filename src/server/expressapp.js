@@ -9,7 +9,7 @@ const security = require('../security');
 class ExpressApp {
     constructor(apiName) {
         this.apiName      = apiName;
-        this.configFile   = 'conf/' + this.apiName;
+        this.configFile   = 'conf/' + this.apiName + '.json';
         this.commonConfig = JSON.parse(fs.readFileSync('conf-common.json'));
         this.config       = JSON.parse(fs.readFileSync(this.configFile));
     }
