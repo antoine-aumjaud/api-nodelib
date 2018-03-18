@@ -23,7 +23,8 @@ class ExpressApp {
                 if(reqSecureKey == null) {
                     reqSecureKey = req.query["secure-key"]; 
                 }
-                if(security.checkSecureKeyAccess(reqSecureKey, this.config.secureKey)) {
+                if(reqSecureKey != null 
+                && security.checkSecureKeyAccess(reqSecureKey, this.config.secureKey)) {
                     next();
                     return;
                 }
