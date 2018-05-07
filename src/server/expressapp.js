@@ -15,6 +15,12 @@ class ExpressApp {
     }
     router() {
         return express.Router()
+            .use((req, res, next) => { 
+                res.header("Access-Control-Allow-Origin", "*"); 
+                res.header("Access-Control-Allow-Credentials", "true");
+                next(); 
+            })
+            .options('/*',(req, res) => res.status(200).end())
             .get('/hi',   (req, res) => res.send("hello"))
             .get('/info', (req, res) => res.json( { "name": this.commonConfig.application_name, "version": this.commonConfig.application_version, "buildDate": this.commonConfig.build_date } ))
 
