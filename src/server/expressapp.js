@@ -18,6 +18,7 @@ class ExpressApp {
             .use((req, res, next) => { 
                 res.header("Access-Control-Allow-Origin", "*"); 
                 res.header("Access-Control-Allow-Credentials", "true");
+                res.header("Access-Control-Allow-Headers", "Authorization");
                 next(); 
             })
             .options('/*',(req, res) => res.status(200).end())
