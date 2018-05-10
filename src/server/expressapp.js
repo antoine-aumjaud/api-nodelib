@@ -21,7 +21,10 @@ class ExpressApp {
                 res.header("Access-Control-Allow-Headers", "Authorization");
                 next(); 
             })
-            .options('/*',(req, res) => res.status(200).end())
+            .options('/*',(req, res) => {
+                res.header("Access-Control-Max-Age", "86400");
+                res.status(200).end()
+            })
             .get('/hi',   (req, res) => res.send("hello"))
             .get('/info', (req, res) => res.json( { "name": this.commonConfig.application_name, "version": this.commonConfig.application_version, "buildDate": this.commonConfig.build_date } ))
 
