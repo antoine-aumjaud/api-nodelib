@@ -1,17 +1,17 @@
 {
   "name": "api-nodelib",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "API Node library",
   "license": "MIT",
   "author": "Antoine Aumjaud",
-  "main":  "index.js",
+  "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "#jasmine --config=test/jasmine.json"
   },
   "repository": "https://github.com/antoine-aumjaud/api-nodelib",
   "dependencies": {
-    "jsonwebtoken": "^8.2.0" 
+    "jsonwebtoken": "^8.2.0"
   },
   "devDependencies": {
     "jasmine": "^2.6.0"

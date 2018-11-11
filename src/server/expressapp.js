@@ -29,24 +29,40 @@ class ExpressApp {
             .get('/info', (req, res) => res.json( { "name": this.commonConfig.application_name, "version": this.commonConfig.application_version, "buildDate": this.commonConfig.build_date } ))
 
             .all('/secure/*', (req, res, next) => {
-                let reqSecureKey = req.header("secure-key"); 
-                if(reqSecureKey == null) {
-                    reqSecureKey = req.query["secure-key"]; 
+                const configSecureToken = this.config.secureKey
+
+                const reqAuthorization = req.header("Authorization");
+                if(reqAuthorization != null) {
+                    if(reqAuthorization.startsWith("Basic")) {
+                        let reqSecureKeyAuthHeader = Buffer.from(reqAuthorization.substring(6 /* "Basic".length */), 'base64').toString('ascii');
+                        reqSecureKeyAuthHeader = reqSecureKeyAuthHeader.substring(0, reqSecureKeyAuthHeader.length - 1);
+                        if(security.checkSecureKeyAccess(reqSecureKeyAuthHeader, configSecureToken)) {
+                            next();
+                            return;
+                        }
+                    }
+                    else if(reqAuthorization.startsWith("Bearer"))  {
+                        const token = reqAuthorization.substring(7 /* "Bearer".length */);
+                        if(security.checkJWTAccess(token, this.apiName)) {
+                            next();
+                            return;
+                        }
+                    }
                 }
-                if(reqSecureKey != null 
-                && security.checkSecureKeyAccess(reqSecureKey, this.config.secureKey)) {
+
+                const reqSecureKeyHeader = req.header("secure-key"); 
+                if(reqSecureKeyHeader != null
+                && security.checkSecureKeyAccess(reqSecureKeyHeader, configSecureToken)) {
+                    next();
+                    return;
+                }
+                const reqSecureKeyParam = req.query["secure-key"]; 
+                if(reqSecureKeyParam != null
+                && security.checkSecureKeyAccess(reqSecureKeyParam, configSecureToken)) {
                     next();
                     return;
                 }
 
-                const reqAuthorization = req.header("Authorization");
-                if(reqAuthorization != null) {
-                    const token = reqAuthorization.substring(reqAuthorization.indexOf("Bearer") + 7);
-                    if(security.checkJWTAccess(token, this.apiName)) {
-                        next();
-                        return;
-                    }
-                }
                 res.status(401).send('Not authorized');
             })
 
