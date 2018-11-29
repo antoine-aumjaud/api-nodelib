@@ -31,6 +31,19 @@ class ExpressApp {
             .all('/secure/*', (req, res, next) => {
                 const configSecureToken = this.config.secureKey
 
+                const reqSecureKeyHeader = req.header("secure-key"); 
+                if(reqSecureKeyHeader != null
+                && security.checkSecureKeyAccess(reqSecureKeyHeader, configSecureToken)) {
+                    next();
+                    return;
+                }
+                const reqSecureKeyParam = req.query["secure-key"]; 
+                if(reqSecureKeyParam != null
+                && security.checkSecureKeyAccess(reqSecureKeyParam, configSecureToken)) {
+                    next();
+                    return;
+                }
+
                 const reqAuthorization = req.header("Authorization");
                 if(reqAuthorization != null) {
                     if(reqAuthorization.startsWith("Basic")) {
@@ -48,19 +61,6 @@ class ExpressApp {
                             return;
                         }
                     }
-                }
-
-                const reqSecureKeyHeader = req.header("secure-key"); 
-                if(reqSecureKeyHeader != null
-                && security.checkSecureKeyAccess(reqSecureKeyHeader, configSecureToken)) {
-                    next();
-                    return;
-                }
-                const reqSecureKeyParam = req.query["secure-key"]; 
-                if(reqSecureKeyParam != null
-                && security.checkSecureKeyAccess(reqSecureKeyParam, configSecureToken)) {
-                    next();
-                    return;
                 }
 
                 res.status(401).send('Not authorized');
