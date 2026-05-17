@@ -4,49 +4,27 @@ on:
   push:
     branches: [ master ]
 
-env:
-  DOCKERHUB_USER: antoineaumjaud
-  IMAGE_NAME: antoineaumjaud/api-nodelib
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '24'
         cache: 'pnpm'
 
     - name: Setup pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v6
       with:
         version: 8
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
 
-    - name: Build config
-      run: pnpm run build-config --if-present
-
     - name: Run tests
       run: pnpm test --if-present
-
-    - name: Log into Docker registry
-      if: ${{ hashFiles('Dockerfile') != '' }}
-      uses: docker/login-action@v3
-      with:
-        username: ${{ env.DOCKERHUB_USER }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Build and push Docker image
-      if: ${{ hashFiles('Dockerfile') != '' }}
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: ${{ env.IMAGE_NAME }}:latest
