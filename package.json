@@ -4,6 +4,10 @@
   "description": "API Node library",
   "license": "MIT",
   "author": "Antoine Aumjaud",
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=10 <12"
+  },
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -11,9 +15,9 @@
   },
   "repository": "https://github.com/antoine-aumjaud/api-nodelib",
   "dependencies": {
-    "jsonwebtoken": "^8.2.0"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "jasmine": "^2.6.0"
+    "jasmine": "^5.8.0"
   }
 }
