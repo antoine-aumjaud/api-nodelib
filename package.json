@@ -5,9 +5,9 @@
   "license": "MIT",
   "author": "Antoine Aumjaud",
   "engines": {
-    "node": ">=24 <25",
-    "npm": ">=10 <12"
+    "node": ">=24 <25"
   },
+  "packageManager": "pnpm@11.1.2",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
